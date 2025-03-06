@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  firstName String    @db.VarChar(50)
+  lastName  String    @db.VarChar(50)
+  email     String    @unique @db.VarChar(100)
+  password  String    @db.VarChar(100)
+  transactions Transaction[]
+}
+
+enum TransactionType {
+  EARNING
+  EXPENSE
+  INVESTMENT
+}
+
+model Transaction {
+  id     String           @id @default(uuid())
+  user   User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  name   String           @db.VarChar(100)
+  date   DateTime         @db.Date
+  amount Decimal          @db.Decimal(10, 2)
+  type   TransactionType
+}
