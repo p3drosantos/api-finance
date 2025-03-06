@@ -6,6 +6,8 @@ import {
   ICreateUserUseCase,
 } from "./protocols";
 
+var validator = require("validator");
+
 export class CreateUserController implements ICreateUserController {
   constructor(private readonly createUserUseCase: ICreateUserUseCase) {}
 
@@ -38,6 +40,24 @@ export class CreateUserController implements ICreateUserController {
             body: `Invalid or missing param: ${field}`,
           };
         }
+      }
+
+      const passwordIsValid = params.password.length >= 6;
+
+      if (!passwordIsValid) {
+        return {
+          statusCode: 400,
+          body: "Password must be at least 6 characters",
+        };
+      }
+
+      const emailIsValid = validator.isEmail(params.email);
+
+      if (!emailIsValid) {
+        return {
+          statusCode: 400,
+          body: "Invalid email",
+        };
       }
 
       const user = await this.createUserUseCase.execute(params);
