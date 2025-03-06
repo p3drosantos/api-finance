@@ -1,0 +1,42 @@
+import express from "express";
+import dotenv from "dotenv";
+
+import { CreateUserRepository } from "./src/repositories/user/create-user";
+import { CreateUserController } from "./src/controllers/user/create-user/create-user";
+import { CreateUserUseCase } from "./src/use-cases/users/create-user";
+import { GetUsersRepository } from "./src/repositories/user/get-users";
+import { GetUsersController } from "./src/controllers/user/get-user/get-user";
+import { GetUsersUseCase } from "./src/use-cases/users/get-users";
+
+dotenv.config();
+
+const app = express();
+
+app.use(express.json());
+
+app.get("/api/users", async (req, res) => {
+  const getUsersRepository = new GetUsersRepository();
+  const getUsersUseCase = new GetUsersUseCase(getUsersRepository);
+
+  const getUsersController = new GetUsersController(getUsersUseCase);
+
+  const { body, statusCode } = await getUsersController.handle();
+
+  res.status(statusCode).send(body);
+});
+
+app.post("/api/users", async (req, res) => {
+  const createUserRepository = new CreateUserRepository();
+  const createUserUseCase = new CreateUserUseCase(createUserRepository);
+  const createUserController = new CreateUserController(createUserUseCase);
+
+  const { body, statusCode } = await createUserController.handle({
+    body: req.body,
+  });
+
+  res.status(statusCode).send(body);
+});
+
+app.listen(process.env.port || 3000, () => {
+  console.log(`Server is running on port ${process.env.port}`);
+});
