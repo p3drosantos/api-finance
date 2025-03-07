@@ -1,4 +1,5 @@
 import { User } from "../../../models/user";
+import { badRequest, created, serverError } from "../../helpers";
 import { HttpRequest, HttpResponse } from "../../protocols";
 import {
   CreateUserParams,
@@ -18,10 +19,7 @@ export class CreateUserController implements ICreateUserController {
       const params = httpRequest.body;
 
       if (!params) {
-        return {
-          statusCode: 400,
-          body: "Please specify a body",
-        };
+        return badRequest("Missing request body");
       }
 
       const requiredFields: (keyof CreateUserParams)[] = [
@@ -45,32 +43,20 @@ export class CreateUserController implements ICreateUserController {
       const passwordIsValid = params.password.length >= 6;
 
       if (!passwordIsValid) {
-        return {
-          statusCode: 400,
-          body: "Password must be at least 6 characters",
-        };
+        return badRequest("Password must have at least 6 characters");
       }
 
       const emailIsValid = validator.isEmail(params.email);
 
       if (!emailIsValid) {
-        return {
-          statusCode: 400,
-          body: "Invalid email",
-        };
+        return badRequest("Invalid email address");
       }
 
       const user = await this.createUserUseCase.execute(params);
-      return {
-        statusCode: 201,
-        body: user,
-      };
+      return created(user);
     } catch (error) {
       console.error(error);
-      return {
-        statusCode: 500,
-        body: "Internal server error",
-      };
+      return serverError("Internal server error");
     }
   }
 }
