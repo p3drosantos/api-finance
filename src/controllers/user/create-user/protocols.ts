@@ -4,7 +4,7 @@ import { HttpRequest, HttpResponse } from "../../protocols";
 export interface ICreateUserController {
   handle(
     httpRequest: HttpRequest<CreateUserParams>,
-  ): Promise<HttpResponse<User>>;
+  ): Promise<HttpResponse<User | { error: string }>>;
 }
 
 export interface CreateUserParams {

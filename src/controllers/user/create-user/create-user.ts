@@ -14,7 +14,7 @@ export class CreateUserController implements ICreateUserController {
 
   async handle(
     httpRequest: HttpRequest<CreateUserParams>,
-  ): Promise<HttpResponse<User>> {
+  ): Promise<HttpResponse<User | { error: string }>> {
     try {
       const params = httpRequest.body;
 

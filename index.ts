@@ -7,6 +7,9 @@ import { CreateUserUseCase } from "./src/use-cases/users/create-user";
 import { GetUsersRepository } from "./src/repositories/user/get-users";
 import { GetUsersController } from "./src/controllers/user/get-user/get-user";
 import { GetUsersUseCase } from "./src/use-cases/users/get-users";
+import { GetUserByIdRepository } from "./src/repositories/user/get-user-by-id";
+import { GetUserByIdUseCase } from "./src/use-cases/users/get-user-by-id";
+import { GetUserByIdController } from "./src/controllers/user/get-user-by-id/get-user-by-id";
 
 dotenv.config();
 
@@ -21,6 +24,18 @@ app.get("/api/users", async (req, res) => {
   const getUsersController = new GetUsersController(getUsersUseCase);
 
   const { body, statusCode } = await getUsersController.handle();
+
+  res.status(statusCode).send(body);
+});
+
+app.get("/api/users/:id", async (req, res) => {
+  const getUserByIdRepository = new GetUserByIdRepository();
+  const getUserByIdUseCase = new GetUserByIdUseCase(getUserByIdRepository);
+  const getUserByIdController = new GetUserByIdController(getUserByIdUseCase);
+
+  const { body, statusCode } = await getUserByIdController.handle({
+    body: req.params,
+  });
 
   res.status(statusCode).send(body);
 });

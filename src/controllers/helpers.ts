@@ -14,9 +14,11 @@ export const created = <T>(data: T): HttpResponse<T> => {
   };
 };
 
-export const serverError = <T>(message: string): HttpResponse<T> => {
+export const serverError = (
+  message: string,
+): HttpResponse<{ error: string }> => {
   return {
     statusCode: 500,
-    body: message,
+    body: { error: message },
   };
 };
