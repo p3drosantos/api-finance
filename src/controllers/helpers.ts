@@ -22,3 +22,17 @@ export const serverError = (
     body: { error: message },
   };
 };
+
+export const ok = <T>(data: T): HttpResponse<T> => {
+  return {
+    statusCode: 200,
+    body: data,
+  };
+};
+
+export const notFound = (message: string): HttpResponse<{ error: string }> => {
+  return {
+    statusCode: 404,
+    body: { error: message },
+  };
+};
