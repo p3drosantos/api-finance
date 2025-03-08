@@ -1,3 +1,4 @@
+import { EmailAlReadyExistsError } from "../../../errors/user";
 import { User } from "../../../models/user";
 import { badRequest, created, serverError } from "../../helpers";
 import { HttpRequest, HttpResponse } from "../../protocols";
@@ -55,6 +56,9 @@ export class CreateUserController implements ICreateUserController {
       const user = await this.createUserUseCase.execute(params);
       return created(user);
     } catch (error) {
+      if (error instanceof EmailAlReadyExistsError) {
+        return badRequest("Email already exists");
+      }
       console.error(error);
       return serverError("Internal server error");
     }
