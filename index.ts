@@ -11,6 +11,9 @@ import { GetUserByIdRepository } from "./src/repositories/user/get-user-by-id";
 import { GetUserByIdUseCase } from "./src/use-cases/users/get-user-by-id";
 import { GetUserByIdController } from "./src/controllers/user/get-user-by-id/get-user-by-id";
 import { GetUserByEmailRepository } from "./src/repositories/user/get-user-by-email";
+import { UpdateUserRepository } from "./src/repositories/user/update-user";
+import { UpdateUserUseCase } from "./src/use-cases/users/update-user";
+import { UpdateUserController } from "./src/controllers/user/update-user/update-user";
 
 dotenv.config();
 
@@ -52,6 +55,19 @@ app.post("/api/users", async (req, res) => {
 
   const { body, statusCode } = await createUserController.handle({
     body: req.body,
+  });
+
+  res.status(statusCode).send(body);
+});
+
+app.patch("/api/users/:id", async (req, res) => {
+  const updateUserRepository = new UpdateUserRepository();
+  const updateUserUseCase = new UpdateUserUseCase(updateUserRepository);
+  const updateUserController = new UpdateUserController(updateUserUseCase);
+
+  const { body, statusCode } = await updateUserController.handle({
+    body: req.body,
+    params: req.params,
   });
 
   res.status(statusCode).send(body);
