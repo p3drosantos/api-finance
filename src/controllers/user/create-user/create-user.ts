@@ -1,6 +1,6 @@
 import { EmailAlReadyExistsError } from "../../../errors/user";
 import { User } from "../../../models/user";
-import { badRequest, created, serverError } from "../../helpers";
+import { badRequest, created, serverError } from "../../helpers/http";
 import { HttpRequest, HttpResponse } from "../../protocols";
 import {
   CreateUserParams,

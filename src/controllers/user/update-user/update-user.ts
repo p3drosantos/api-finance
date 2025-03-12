@@ -1,5 +1,6 @@
 import { User } from "../../../models/user";
-import { badRequest, created } from "../../helpers";
+import { badRequest, created } from "../../helpers/http";
+import { checkIfIdIsValid } from "../../helpers/validation";
 import { HttpRequest, HttpResponse } from "../../protocols";
 import {
   IUpdateUserController,
@@ -16,6 +17,12 @@ export class UpdateUserController implements IUpdateUserController {
     try {
       const { id } = httpRequest.params;
       const { body } = httpRequest ?? {};
+
+      const isValidID = checkIfIdIsValid(id);
+
+      if (!isValidID) {
+        return badRequest("id is invalid");
+      }
 
       if (!id) {
         return badRequest("id is required");
