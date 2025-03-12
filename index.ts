@@ -14,6 +14,9 @@ import { GetUserByEmailRepository } from "./src/repositories/user/get-user-by-em
 import { UpdateUserRepository } from "./src/repositories/user/update-user";
 import { UpdateUserUseCase } from "./src/use-cases/users/update-user";
 import { UpdateUserController } from "./src/controllers/user/update-user/update-user";
+import { DeleteUserRepository } from "./src/repositories/user/delete-user";
+import { DeleteUserUseCase } from "./src/use-cases/users/delete-user";
+import { DeleteUserController } from "./src/controllers/user/delete-user/delete-user";
 
 dotenv.config();
 
@@ -68,6 +71,18 @@ app.patch("/api/users/:id", async (req, res) => {
   const { body, statusCode } = await updateUserController.handle({
     body: req.body,
     params: req.params,
+  });
+
+  res.status(statusCode).send(body);
+});
+
+app.delete("/api/users/:id", async (req, res) => {
+  const deleteUserRepository = new DeleteUserRepository();
+  const deleteUserUseCase = new DeleteUserUseCase(deleteUserRepository);
+  const deleteUserController = new DeleteUserController(deleteUserUseCase);
+
+  const { body, statusCode } = await deleteUserController.handle({
+    body: req.params,
   });
 
   res.status(statusCode).send(body);
