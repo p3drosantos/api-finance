@@ -1,22 +1,13 @@
 import express from "express";
 import dotenv from "dotenv";
 
-import { CreateUserRepository } from "./src/repositories/user/create-user";
-import { CreateUserController } from "./src/controllers/user/create-user/create-user";
-import { CreateUserUseCase } from "./src/use-cases/users/create-user";
-import { GetUsersRepository } from "./src/repositories/user/get-users";
-import { GetUsersController } from "./src/controllers/user/get-user/get-user";
-import { GetUsersUseCase } from "./src/use-cases/users/get-users";
-import { GetUserByIdRepository } from "./src/repositories/user/get-user-by-id";
-import { GetUserByIdUseCase } from "./src/use-cases/users/get-user-by-id";
-import { GetUserByIdController } from "./src/controllers/user/get-user-by-id/get-user-by-id";
-import { GetUserByEmailRepository } from "./src/repositories/user/get-user-by-email";
-import { UpdateUserRepository } from "./src/repositories/user/update-user";
-import { UpdateUserUseCase } from "./src/use-cases/users/update-user";
-import { UpdateUserController } from "./src/controllers/user/update-user/update-user";
-import { DeleteUserRepository } from "./src/repositories/user/delete-user";
-import { DeleteUserUseCase } from "./src/use-cases/users/delete-user";
-import { DeleteUserController } from "./src/controllers/user/delete-user/delete-user";
+import {
+  makeCreateUserController,
+  makeDeleteUserController,
+  makeGetUserByIdController,
+  makeGetUsersController,
+  makeUpdateUserController,
+} from "./src/factories/controllers/user";
 
 dotenv.config();
 
@@ -25,10 +16,7 @@ const app = express();
 app.use(express.json());
 
 app.get("/api/users", async (req, res) => {
-  const getUsersRepository = new GetUsersRepository();
-  const getUsersUseCase = new GetUsersUseCase(getUsersRepository);
-
-  const getUsersController = new GetUsersController(getUsersUseCase);
+  const getUsersController = makeGetUsersController();
 
   const { body, statusCode } = await getUsersController.handle();
 
@@ -36,9 +24,7 @@ app.get("/api/users", async (req, res) => {
 });
 
 app.get("/api/users/:id", async (req, res) => {
-  const getUserByIdRepository = new GetUserByIdRepository();
-  const getUserByIdUseCase = new GetUserByIdUseCase(getUserByIdRepository);
-  const getUserByIdController = new GetUserByIdController(getUserByIdUseCase);
+  const getUserByIdController = makeGetUserByIdController();
 
   const { body, statusCode } = await getUserByIdController.handle({
     body: req.params,
@@ -48,13 +34,7 @@ app.get("/api/users/:id", async (req, res) => {
 });
 
 app.post("/api/users", async (req, res) => {
-  const createUserRepository = new CreateUserRepository();
-  const getUserByEmailRepository = new GetUserByEmailRepository();
-  const createUserUseCase = new CreateUserUseCase(
-    createUserRepository,
-    getUserByEmailRepository,
-  );
-  const createUserController = new CreateUserController(createUserUseCase);
+  const createUserController = makeCreateUserController();
 
   const { body, statusCode } = await createUserController.handle({
     body: req.body,
@@ -64,9 +44,7 @@ app.post("/api/users", async (req, res) => {
 });
 
 app.patch("/api/users/:id", async (req, res) => {
-  const updateUserRepository = new UpdateUserRepository();
-  const updateUserUseCase = new UpdateUserUseCase(updateUserRepository);
-  const updateUserController = new UpdateUserController(updateUserUseCase);
+  const updateUserController = makeUpdateUserController();
 
   const { body, statusCode } = await updateUserController.handle({
     body: req.body,
@@ -77,9 +55,7 @@ app.patch("/api/users/:id", async (req, res) => {
 });
 
 app.delete("/api/users/:id", async (req, res) => {
-  const deleteUserRepository = new DeleteUserRepository();
-  const deleteUserUseCase = new DeleteUserUseCase(deleteUserRepository);
-  const deleteUserController = new DeleteUserController(deleteUserUseCase);
+  const deleteUserController = makeDeleteUserController();
 
   const { body, statusCode } = await deleteUserController.handle({
     body: req.params,
