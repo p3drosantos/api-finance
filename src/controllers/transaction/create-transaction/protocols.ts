@@ -12,3 +12,7 @@ export interface CreateTransactionParams {
 export interface ICreateTransactionRepository {
   create(params: CreateTransactionParams): Promise<PrismaTransaction>;
 }
+
+export interface ICreateTransactionUseCase {
+  create(params: CreateTransactionParams): Promise<PrismaTransaction>;
+}
