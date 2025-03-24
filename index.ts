@@ -8,6 +8,7 @@ import {
   makeGetUsersController,
   makeUpdateUserController,
 } from "./src/factories/controllers/user";
+import { makeCreateTransactionController } from "./src/factories/controllers/transaction";
 
 dotenv.config();
 
@@ -59,6 +60,16 @@ app.delete("/api/users/:id", async (req, res) => {
 
   const { body, statusCode } = await deleteUserController.handle({
     body: req.params,
+  });
+
+  res.status(statusCode).send(body);
+});
+
+app.post("/api/transactions", async (req, res) => {
+  const createTransactionController = makeCreateTransactionController();
+
+  const { body, statusCode } = await createTransactionController.handle({
+    body: req.body,
   });
 
   res.status(statusCode).send(body);
