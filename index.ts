@@ -8,7 +8,10 @@ import {
   makeGetUsersController,
   makeUpdateUserController,
 } from "./src/factories/controllers/user";
-import { makeCreateTransactionController } from "./src/factories/controllers/transaction";
+import {
+  makeCreateTransactionController,
+  makeGetTransactionsByUserIdController,
+} from "./src/factories/controllers/transaction";
 
 dotenv.config();
 
@@ -70,6 +73,17 @@ app.post("/api/transactions", async (req, res) => {
 
   const { body, statusCode } = await createTransactionController.handle({
     body: req.body,
+  });
+
+  res.status(statusCode).send(body);
+});
+
+app.get("/api/transactions", async (req, res) => {
+  const getTransactionsByUserIdController =
+    makeGetTransactionsByUserIdController();
+
+  const { body, statusCode } = await getTransactionsByUserIdController.handle({
+    query: req.query,
   });
 
   res.status(statusCode).send(body);
