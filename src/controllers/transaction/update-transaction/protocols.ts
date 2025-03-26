@@ -11,3 +11,10 @@ export interface UpdateTransactionParams {
 export interface IUpdateTransactionRepository {
   update: (id: string, params: UpdateTransactionParams) => Promise<Transaction>;
 }
+
+export interface IUpdateTransactionUseCase {
+  execute: (
+    id: string,
+    params: UpdateTransactionParams,
+  ) => Promise<Transaction>;
+}
