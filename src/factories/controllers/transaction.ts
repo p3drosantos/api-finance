@@ -1,11 +1,14 @@
 import { CreateTransactionController } from "../../controllers/transaction/create-transaction/create-transaction";
+import { DeleteTransactionController } from "../../controllers/transaction/delete-transaction/delete-transaction";
 import { GetTransactionsByUserIdController } from "../../controllers/transaction/get-transactions-by-user-id/get-transactions-by-user-id";
 import { UpdateTransactionController } from "../../controllers/transaction/update-transaction/update-transactions";
 import { CreateTransactionRepository } from "../../repositories/transaction/create-transaction";
+import { DeleteTransactionRepository } from "../../repositories/transaction/delete-transaction";
 import { GetTransactionsByUserIdRepository } from "../../repositories/transaction/get-transactions-by-user-id";
 import { UpdateTransactionRepository } from "../../repositories/transaction/update-transaction";
 import { GetUserByIdRepository } from "../../repositories/user/get-user-by-id";
 import { CreateTransactionUseCase } from "../../use-cases/transaction/create-transaction";
+import { DeleteTransactionUseCase } from "../../use-cases/transaction/delete-transaction";
 import { GetTransactionsByUserIdUseCase } from "../../use-cases/transaction/get-transactions-by-user-id";
 import { UpadateTransactionUseCase } from "../../use-cases/transaction/update-transaction";
 
@@ -44,4 +47,15 @@ export const makeUpdateTransactionController = () => {
     updateTransactionUseCase,
   );
   return updateTransactionController;
+};
+
+export const makeDeleteTransactionController = () => {
+  const deleteTransactionRepository = new DeleteTransactionRepository();
+  const deleteTransactionUseCase = new DeleteTransactionUseCase(
+    deleteTransactionRepository,
+  );
+  const deleteTransactionController = new DeleteTransactionController(
+    deleteTransactionUseCase,
+  );
+  return deleteTransactionController;
 };
