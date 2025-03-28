@@ -11,5 +11,5 @@ export interface IGetUserBalanceRepository {
 }
 
 export interface IGetUserBalanceUseCase {
-  getUserBalance(userId: string): Promise<GetUserBalanceResponse>;
+  execute(userId: string): Promise<GetUserBalanceResponse>;
 }

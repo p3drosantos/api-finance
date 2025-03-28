@@ -11,7 +11,7 @@ export class GetUserBalanceUseCase implements IGetUserBalanceUseCase {
     private readonly getUserByIdRepository: IGetUserByIdRepository,
   ) {}
 
-  async getUserBalance(userId: string) {
+  async execute(userId: string) {
     const user = await this.getUserByIdRepository.getUserById(userId);
 
     if (!user) {
