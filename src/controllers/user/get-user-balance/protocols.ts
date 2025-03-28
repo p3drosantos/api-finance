@@ -9,3 +9,7 @@ export interface GetUserBalanceResponse {
 export interface IGetUserBalanceRepository {
   getUserBalance(userId: string): Promise<GetUserBalanceResponse>;
 }
+
+export interface IGetUserBalanceUseCase {
+  getUserBalance(userId: string): Promise<GetUserBalanceResponse>;
+}
