@@ -1,5 +1,6 @@
 import { EmailAlReadyExistsError } from "../../../errors/user";
 import { User } from "../../../models/user";
+import { createUserSchema } from "../../../schemas/user";
 import { badRequest, created, serverError } from "../../helpers/http";
 import { HttpRequest, HttpResponse } from "../../protocols";
 import {
@@ -8,7 +9,7 @@ import {
   ICreateUserUseCase,
 } from "./protocols";
 
-var validator = require("validator");
+import { ZodError } from "zod";
 
 export class CreateUserController implements ICreateUserController {
   constructor(private readonly createUserUseCase: ICreateUserUseCase) {}
@@ -17,47 +18,23 @@ export class CreateUserController implements ICreateUserController {
     httpRequest: HttpRequest<CreateUserParams>,
   ): Promise<HttpResponse<User | { error: string }>> {
     try {
+      if (!httpRequest.body) {
+        return badRequest("Missing params");
+      }
+
       const params = httpRequest.body;
 
-      if (!params) {
-        return badRequest("Missing request body");
-      }
-
-      const requiredFields: (keyof CreateUserParams)[] = [
-        "firstName",
-        "lastName",
-        "email",
-        "password",
-      ];
-
-      for (const field of requiredFields) {
-        const value = params[field];
-
-        if (typeof value !== "string" || !value.trim()) {
-          return {
-            statusCode: 400,
-            body: `Invalid or missing param: ${field}`,
-          };
-        }
-      }
-
-      const passwordIsValid = params.password.length >= 6;
-
-      if (!passwordIsValid) {
-        return badRequest("Password must have at least 6 characters");
-      }
-
-      const emailIsValid = validator.isEmail(params.email);
-
-      if (!emailIsValid) {
-        return badRequest("Invalid email address");
-      }
+      await createUserSchema.parseAsync(params);
 
       const user = await this.createUserUseCase.execute(params);
       return created(user);
     } catch (error) {
+      if (error instanceof ZodError) {
+        return badRequest(error.errors[0].message);
+      }
+
       if (error instanceof EmailAlReadyExistsError) {
-        return badRequest("Email already exists");
+        return badRequest(error.message);
       }
       console.error(error);
       return serverError("Internal server error");
