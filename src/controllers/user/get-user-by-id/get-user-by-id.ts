@@ -23,7 +23,7 @@ export class GetUserByIdController implements IGetUserByIdController {
 
       return ok(user);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return serverError("Internal server error");
     }
   }

@@ -23,8 +23,6 @@ export class CreateTransactionController
     try {
       const params = httpRequest.body;
 
-      console.log(params?.userId);
-
       if (!params) {
         return badRequest("Missing request body");
       }

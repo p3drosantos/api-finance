@@ -38,7 +38,7 @@ export class DeleteTransactionController
 
       return ok(transaction);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return serverError("Internal server error");
     }
   }

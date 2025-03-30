@@ -29,7 +29,7 @@ export class DeleteUserController implements IDeleteUserController {
 
       return ok(user); // Retorna o usuário deletado
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return serverError("Internal server error");
     }
   }
