@@ -1,3 +1,5 @@
+import { HttpRequest, HttpResponse } from "../../protocols";
+
 export interface GetUserBalanceResponse {
   userId: string;
   earnings: number;
@@ -12,4 +14,10 @@ export interface IGetUserBalanceRepository {
 
 export interface IGetUserBalanceUseCase {
   execute(userId: string): Promise<GetUserBalanceResponse>;
+}
+
+export interface IGetUserBalanceController {
+  handle(
+    httpRequest: HttpRequest<{ id: string }>,
+  ): Promise<HttpResponse<GetUserBalanceResponse | { error: string }>>;
 }
