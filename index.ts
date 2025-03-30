@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import {
   makeCreateUserController,
   makeDeleteUserController,
+  makeGetUserBalanceController,
   makeGetUserByIdController,
   makeGetUsersController,
   makeUpdateUserController,
@@ -34,6 +35,16 @@ app.get("/api/users/:id", async (req, res) => {
 
   const { body, statusCode } = await getUserByIdController.handle({
     body: req.params,
+  });
+
+  res.status(statusCode).send(body);
+});
+
+app.get("/api/users/:userId/balance", async (req, res) => {
+  const getUserBalanceController = makeGetUserBalanceController();
+
+  const { body, statusCode } = await getUserBalanceController.handle({
+    params: req.params,
   });
 
   res.status(statusCode).send(body);

@@ -1,16 +1,19 @@
 import { CreateUserController } from "../../controllers/user/create-user/create-user";
 import { DeleteUserController } from "../../controllers/user/delete-user/delete-user";
+import { GetUserBalanceController } from "../../controllers/user/get-user-balance/get-user-balance";
 import { GetUserByIdController } from "../../controllers/user/get-user-by-id/get-user-by-id";
 import { GetUsersController } from "../../controllers/user/get-user/get-user";
 import { UpdateUserController } from "../../controllers/user/update-user/update-user";
 import { CreateUserRepository } from "../../repositories/user/create-user";
 import { DeleteUserRepository } from "../../repositories/user/delete-user";
+import { GetUserBalanceRepository } from "../../repositories/user/get-user-balance";
 import { GetUserByEmailRepository } from "../../repositories/user/get-user-by-email";
 import { GetUserByIdRepository } from "../../repositories/user/get-user-by-id";
 import { GetUsersRepository } from "../../repositories/user/get-users";
 import { UpdateUserRepository } from "../../repositories/user/update-user";
 import { CreateUserUseCase } from "../../use-cases/users/create-user";
 import { DeleteUserUseCase } from "../../use-cases/users/delete-user";
+import { GetUserBalanceUseCase } from "../../use-cases/users/get-user-balance";
 import { GetUserByIdUseCase } from "../../use-cases/users/get-user-by-id";
 import { GetUsersUseCase } from "../../use-cases/users/get-users";
 import { UpdateUserUseCase } from "../../use-cases/users/update-user";
@@ -52,4 +55,17 @@ export const makeDeleteUserController = () => {
   const deleteUserUseCase = new DeleteUserUseCase(deleteUserRepository);
   const deleteUserController = new DeleteUserController(deleteUserUseCase);
   return deleteUserController;
+};
+
+export const makeGetUserBalanceController = () => {
+  const getUserBalanceRepository = new GetUserBalanceRepository();
+  const getUserByIdRepository = new GetUserByIdRepository();
+  const getUserBalanceUseCase = new GetUserBalanceUseCase(
+    getUserBalanceRepository,
+    getUserByIdRepository,
+  );
+  const getUserBalanceController = new GetUserBalanceController(
+    getUserBalanceUseCase,
+  );
+  return getUserBalanceController;
 };
