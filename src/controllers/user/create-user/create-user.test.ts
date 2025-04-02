@@ -45,9 +45,24 @@ describe("Create User Controller", () => {
       },
     };
 
-    const result = await createUserController.handle(
-      httpRequest as HttpRequest<CreateUserParams>,
+    const result = await createUserController.handle(httpRequest as any);
+
+    expect(result.statusCode).toBe(400);
+  });
+
+  it("should return 400 if lastName is missing", async () => {
+    const createUserController = new CreateUserController(
+      new CreateUserUseCaseStub(),
     );
+    const httpRequest = {
+      body: {
+        firstName: "John",
+        email: "jhondoe@gmail.com",
+        password: "12345678",
+      },
+    };
+
+    const result = await createUserController.handle(httpRequest as any);
 
     expect(result.statusCode).toBe(400);
   });
