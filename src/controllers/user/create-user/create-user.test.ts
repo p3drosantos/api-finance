@@ -1,3 +1,4 @@
+import { HttpRequest } from "../../protocols";
 import { CreateUserController } from "./create-user";
 import { CreateUserParams } from "./protocols";
 
@@ -29,5 +30,25 @@ describe("Create User Controller", () => {
 
     expect(result.statusCode).toBe(201);
     expect(result.body).toMatchObject(httpRequest.body);
+  });
+
+  it("should return 400 if firstName is missing", async () => {
+    const createUserController = new CreateUserController(
+      new CreateUserUseCaseStub(),
+    );
+
+    const httpRequest = {
+      body: {
+        lastName: "Doe",
+        email: "jhondoe@gmail.com",
+        password: "12345678",
+      },
+    };
+
+    const result = await createUserController.handle(
+      httpRequest as HttpRequest<CreateUserParams>,
+    );
+
+    expect(result.statusCode).toBe(400);
   });
 });
