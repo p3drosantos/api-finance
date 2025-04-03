@@ -1,3 +1,4 @@
+import { EmailAlReadyExistsError } from "../../../errors/user";
 import { HttpRequest } from "../../protocols";
 import { CreateUserController } from "./create-user";
 import { CreateUserParams } from "./protocols";
@@ -183,5 +184,27 @@ describe("Create User Controller", () => {
     });
 
     const result = await createUserController.handle(httpRequest as any);
+  });
+
+  it("should return 500 if CreateUserUseCase throws EmailAlReadyExistsError ", async () => {
+    const createUserUseCaseStub = new CreateUserUseCaseStub();
+    const createUserController = new CreateUserController(
+      createUserUseCaseStub,
+    );
+    const httpRequest = {
+      body: {
+        firstName: "John",
+        lastName: "Doe",
+        email: "jhondoe@gmail.com",
+        password: "12345678",
+      },
+    };
+
+    jest.spyOn(createUserUseCaseStub, "execute").mockImplementationOnce(() => {
+      throw new EmailAlReadyExistsError();
+    });
+
+    const result = await createUserController.handle(httpRequest as any);
+    expect(result.statusCode).toBe(400);
   });
 });
