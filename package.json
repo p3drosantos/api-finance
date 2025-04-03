@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
+    "test:watch": "jest --watch --silent",
     "dev": "nodemon --exec ts-node index.ts"
   },
   "keywords": [],
